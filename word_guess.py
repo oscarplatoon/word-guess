@@ -1,5 +1,9 @@
 import random 
 import string 
+import csv
+import os
+my_path = os.path.abspath(os.path.dirname(__file__))
+path = os.path.join(my_path, "../word-guess/words.csv")
 
 class WordGuess:
     tries = {
@@ -13,11 +17,12 @@ class WordGuess:
         self.debug = debug
 
         # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
+        self.words = self.read_csv()
+        # self.words = {
+        #     'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
+        #     'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
+        #     'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
+        # }
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
@@ -38,6 +43,16 @@ class WordGuess:
         # start the first turn
         self.play_turn()
 
+    def read_csv(self):
+        with open(path) as words_file:
+            reader = csv.reader(words_file, delimiter=",")
+            d = {}
+            for row in reader:
+                if not row[0] in d:
+                    d[row[0]]=[]
+                for value in row[1:]:
+                    d[row[0]].append(value)
+            return d
 
     def joined_user_word(self):
         return "".join(self.user_word)
@@ -58,7 +73,7 @@ class WordGuess:
 
         # debugging
         print(f"Previous guesses: { ''.join(self.guessed)}")
-        print(f"You guessed { letter }. The word is now { self.joined_user_word() }.")
+        print(f"You guessed { letter }. The word is now { self.joined_user_word() }.") #
         print(f"You have { self.guesses } guesses left.")
 
         # determine if the player has won or lost
@@ -73,7 +88,7 @@ class WordGuess:
         mode = ''
         while mode not in ['e', 'm', 'h']:
             mode = input("\nThis can be (e)asy, (m)edium or really (h)ard. The choice is yours: ")
-        return mode 
+        return mode
 
     def add_to_guessed(self,letter):
         if letter not in self.guessed:
@@ -112,4 +127,5 @@ class WordGuess:
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
 
-WordGuess()
+WordGuess(True)
+
