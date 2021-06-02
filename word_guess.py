@@ -81,8 +81,9 @@ class WordGuess:
                 row_key = row[0]
                 row_values = []
                 length = len(row)
-                row_values.append()
-                insert_row_dict = {row_key : ["test", "WIP"]}
+                for row_index in range(1, length):
+                    row_values.append(row[row_index])
+                insert_row_dict = {row_key : row_values}
                 print(insert_row_dict)
                 return(insert_row_dict)
 
