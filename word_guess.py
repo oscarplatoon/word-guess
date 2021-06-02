@@ -1,5 +1,7 @@
 import random 
 import string 
+import os.path 
+import csv
 
 class WordGuess:
     tries = {
@@ -13,12 +15,7 @@ class WordGuess:
         self.debug = debug
 
         # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
-
+        self.words = WordGuess.load_words()
         # ask the user to set the game mode
         self.mode = self.set_mode()
 
@@ -81,9 +78,9 @@ class WordGuess:
 
     def end_game(self, won):
         if won: 
-            print("You wins the game! Yay! ^␣^")
+            print("You win the game! Yay! ^␣^")
         else:
-            print("You did not wins the game. :( Next time you will, I bet. <3")
+            print("You did not win the game. :( Next time you will, I bet. <3")
         return
     
     def won(self):
@@ -111,5 +108,17 @@ class WordGuess:
         while letter not in list(string.ascii_lowercase):
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
+    
+    @classmethod
+    def load_words(cls):
+        output = {}
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(my_path, 'words.csv')
+        with open(path) as csv_file:
+            reader = csv.reader(csv_file)
+            for row in reader:
+                output.update({row[0]: row[1::]})
+        return(output)
+
 
 WordGuess()
