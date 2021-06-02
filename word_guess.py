@@ -74,6 +74,7 @@ class WordGuess:
             self.play_turn()
 
     def csv_extended_dictionary(self):
+        extended_dict = {}
         with open('words.csv') as csv_dictionary:
             csv_reader = csv.reader(csv_dictionary)
             for row in csv_reader:
@@ -83,9 +84,8 @@ class WordGuess:
                 length = len(row)
                 for row_index in range(1, length):
                     row_values.append(row[row_index])
-                insert_row_dict = {row_key : row_values}
-                print(insert_row_dict)
-                return(insert_row_dict)
+                extended_dict[row_key]= row_values
+        return extended_dict
 
     def set_mode(self):
         mode = ''
