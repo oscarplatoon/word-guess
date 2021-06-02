@@ -78,7 +78,6 @@ class WordGuess:
         with open('words.csv') as csv_dictionary:
             csv_reader = csv.reader(csv_dictionary)
             for row in csv_reader:
-                print(row)
                 row_key = row[0]
                 row_values = []
                 length = len(row)
@@ -130,4 +129,4 @@ class WordGuess:
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
 
-WordGuess()
+WordGuess(True)
