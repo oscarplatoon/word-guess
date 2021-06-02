@@ -1,5 +1,6 @@
 import random 
 import string 
+import csv
 
 class WordGuess:
     tries = {
@@ -13,11 +14,14 @@ class WordGuess:
         self.debug = debug
 
         # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
+        # This is where the dictionary is loaded.
+        # Change this to call a csv_dictionary_loader.
+        self.words = self.csv_extended_dictionary()
+        # {
+        #     'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
+        #     'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
+        #     'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
+        # }
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
@@ -68,6 +72,19 @@ class WordGuess:
             self.end_game(False)
         else: # play another turn if we haven't won or lost
             self.play_turn()
+
+    def csv_extended_dictionary(self):
+        with open('words.csv') as csv_dictionary:
+            csv_reader = csv.reader(csv_dictionary)
+            for row in csv_reader:
+                print(row)
+                row_key = row[0]
+                row_values = []
+                length = len(row)
+                row_values.append()
+                insert_row_dict = {row_key : ["test", "WIP"]}
+                print(insert_row_dict)
+                return(insert_row_dict)
 
     def set_mode(self):
         mode = ''
