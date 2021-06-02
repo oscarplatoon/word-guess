@@ -1,5 +1,4 @@
-import random 
-import string 
+import random, string, csv
 
 class WordGuess:
     tries = {
@@ -13,16 +12,12 @@ class WordGuess:
         self.debug = debug
 
         # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
+        self.words = self.get_words()
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
 
-        self.word = random.choice(self.words[self.mode]) # chosen word; players try to guess this
+        self.word = random.choice(self.words[self.mode]).lower() # chosen word; players try to guess this
         self.guesses = self.tries[self.mode] # how many tries the player gets
         self.user_word = list("•" * len(self.word)) # a "blank word" for user output
         self.guessed = [] # keep track of letters that have been guessed
@@ -38,6 +33,14 @@ class WordGuess:
         # start the first turn
         self.play_turn()
 
+    def get_words(self):
+        words = {}
+        with open("challenges/week2/word-guess/words.csv") as f:
+           reader = csv.reader(f)
+           for line in reader:
+               #Make a dictionary entry for each difficulty
+                words[line[0]] = line[1:]
+        return words
 
     def joined_user_word(self):
         return "".join(self.user_word)
@@ -112,4 +115,4 @@ class WordGuess:
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
 
-WordGuess()
+WordGuess(True)
