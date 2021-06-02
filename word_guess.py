@@ -1,5 +1,6 @@
 import random 
 import string 
+import csv
 
 class WordGuess:
     tries = {
@@ -13,11 +14,7 @@ class WordGuess:
         self.debug = debug
 
         # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
+        self.words = self.set_words()
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
@@ -111,5 +108,16 @@ class WordGuess:
         while letter not in list(string.ascii_lowercase):
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
+    
+    def set_words(cls):
+        output_dict = {} 
+        with open("words.csv") as words_file:
+            csv_reader = csv.reader(words_file)
+            for line in csv_reader:
+                output_dict_key = line.pop(0)
+                output_dict[output_dict_key] = line
+    
+        return output_dict
+                                
 
 WordGuess()
