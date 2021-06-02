@@ -1,5 +1,6 @@
 import random 
-import string 
+import string
+import csv
 
 class WordGuess:
     tries = {
@@ -7,17 +8,23 @@ class WordGuess:
         'm' : 6, 
         'h' : 4
     }
-    
+        
     def __init__(self, debug=False):
          # are we in debug mode?
         self.debug = debug
 
-        # possible words, selected at random
-        self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
-        }
+    # possible words, selected at random
+    # words is empty dictionary that will
+    # get filled by csv reader
+    # csv reader takes first index as key
+    # and splices every remaining index in row
+    # as the values for the key
+    
+        self.words = {}
+        with open('words.csv') as csv_file:
+            reader = csv.reader(csv_file)
+            for row in reader:
+                self.words[row[0]] = row[1:]
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
@@ -30,15 +37,14 @@ class WordGuess:
         # debugging?
         if self.debug:
             print(f"Your word is { self.word }.")
-      
+        
         # user messages
             print(f"You have { self.guesses } guesses.")
             print(f"Guess the word: { self.joined_user_word() }")
 
         # start the first turn
         self.play_turn()
-
-
+    
     def joined_user_word(self):
         return "".join(self.user_word)
 
@@ -68,7 +74,7 @@ class WordGuess:
             self.end_game(False)
         else: # play another turn if we haven't won or lost
             self.play_turn()
-
+    
     def set_mode(self):
         mode = ''
         while mode not in ['e', 'm', 'h']:
@@ -112,4 +118,4 @@ class WordGuess:
             letter = input("\nPlease guess a letter! (a..z): ").lower()
         return letter 
 
-WordGuess()
+WordGuess(True)
