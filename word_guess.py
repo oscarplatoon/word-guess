@@ -1,5 +1,6 @@
 import random 
 import string 
+import csv
 
 class WordGuess:
     tries = {
@@ -8,15 +9,40 @@ class WordGuess:
         'h' : 4
     }
     
+
+    # with open('sample.csv', newline='\n') as words_file:
+    #     csv_reader = csv.reader(words_file, delimiter=',')
+    #     for words in words_file:
+    #         print(words)
+
+
+    
     def __init__(self, debug=False):
          # are we in debug mode?
         self.debug = debug
 
+        easy = []
+        med  = []
+        hard = []
+        
+        with open('words.csv', 'r', newline='') as sample_file:
+            csv_reader = csv.reader(sample_file, delimiter=',')
+            med = next(csv_reader)              # Match line 1
+            easy = next(csv_reader)             # Match line 2
+            hard = next(csv_reader)             # Match line 3
+
         # possible words, selected at random
+        # self.words = {
+        #     'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
+        #     'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
+        #     'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
+        # }
+
+        # Includes the first element of the row which might give 'e', 'm', 'h' as it's random word
         self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
+            'e' : easy,
+            'm' : med,
+            'h' : hard
         }
 
         # ask the user to set the game mode
