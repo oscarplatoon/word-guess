@@ -1,43 +1,54 @@
-import random 
-import string 
+import random
+import string
+import os.path
+import csv
+
 
 class WordGuess:
     tries = {
-        'e' : 10, 
-        'm' : 6, 
-        'h' : 4
+        'e': 10,
+        'm': 6,
+        'h': 4
     }
-    
+
     def __init__(self, debug=False):
-         # are we in debug mode?
+
+        # are we in debug mode?
         self.debug = debug
 
         # possible words, selected at random
+        self.words = {}
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(my_path, "words.csv")
+        with open(path) as csvfile:
+            reader = csv.reader(csvfile)
+            for value in reader:
+                print(value[0], value[1])
+                self.words[value[0]] = value[1:]
+
         self.words = {
-            'e' : ['dog','cat','bug','hat','cap','lit','kin','fan','fin','fun','tan','ten','tin','ton'],
-            'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
-            'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
+            'e': ['dog', 'cat', 'bug', 'hat', 'cap', 'lit', 'kin', 'fan', 'fin', 'fun', 'tan', 'ten', 'tin', 'ton'],
+            'm': ['plain', 'claim', 'brine', 'crime', 'alive', 'bride', 'skine', 'drive', 'slime', 'stein', 'jumpy'],
+            'h': ['machiavellian', 'prestidigitation', 'plenipotentiary', 'quattuordecillion', 'magnanimous', 'unencumbered', 'bioluminescent', 'circumlocution']
         }
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
 
-        self.word = random.choice(self.words[self.mode]) # chosen word; players try to guess this
-        self.guesses = self.tries[self.mode] # how many tries the player gets
-        self.user_word = list("•" * len(self.word)) # a "blank word" for user output
-        self.guessed = [] # keep track of letters that have been guessed
+        # chosen word; players try to guess this
+        self.word = random.choice(self.words[self.mode])
+        self.guesses = self.tries[self.mode]  # how many tries the player gets
+        # a "blank word" for user output
+        self.user_word = list("•" * len(self.word))
+        self.guessed = []  # keep track of letters that have been guessed
 
         # debugging?
         if self.debug:
             print(f"Your word is { self.word }.")
-      
+
         # user messages
             print(f"You have { self.guesses } guesses.")
             print(f"Guess the word: { self.joined_user_word() }")
-
-        # start the first turn
-        self.play_turn()
-
 
     def joined_user_word(self):
         return "".join(self.user_word)
@@ -58,7 +69,8 @@ class WordGuess:
 
         # debugging
         print(f"Previous guesses: { ''.join(self.guessed)}")
-        print(f"You guessed { letter }. The word is now { self.joined_user_word() }.")
+        print(
+            f"You guessed { letter }. The word is now { self.joined_user_word() }.")
         print(f"You have { self.guesses } guesses left.")
 
         # determine if the player has won or lost
@@ -66,26 +78,27 @@ class WordGuess:
             self.end_game(True)
         elif self.lost():
             self.end_game(False)
-        else: # play another turn if we haven't won or lost
+        else:  # play another turn if we haven't won or lost
             self.play_turn()
 
     def set_mode(self):
         mode = ''
         while mode not in ['e', 'm', 'h']:
-            mode = input("\nThis can be (e)asy, (m)edium or really (h)ard. The choice is yours: ")
-        return mode 
+            mode = input(
+                "\nThis can be (e)asy, (m)edium or really (h)ard. The choice is yours: ")
+        return mode
 
-    def add_to_guessed(self,letter):
+    def add_to_guessed(self, letter):
         if letter not in self.guessed:
             self.guessed.append(letter)
 
     def end_game(self, won):
-        if won: 
+        if won:
             print("You wins the game! Yay! ^␣^")
         else:
             print("You did not wins the game. :( Next time you will, I bet. <3")
         return
-    
+
     def won(self):
         # we win when the user has guessed all the letters to the word
         return self.word == self.joined_user_word()
@@ -100,16 +113,17 @@ class WordGuess:
         if letter not in self.word and letter not in self.guessed:
             self.guesses -= 1
 
-    def update_user_word(self,letter):
+    def update_user_word(self, letter):
         for i, l in enumerate(self.word):
-            if self.word[i] == letter: 
-                self.user_word[i] = letter 
+            if self.word[i] == letter:
+                self.user_word[i] = letter
 
     def ask_for_letter(self):
         letter = ''
         # we import the string module to give us access to an easy way to create a list of the entire alphabet
         while letter not in list(string.ascii_lowercase):
             letter = input("\nPlease guess a letter! (a..z): ").lower()
-        return letter 
+        return letter
+
 
 WordGuess()
