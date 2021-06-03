@@ -1,5 +1,7 @@
 import random 
 import string 
+import csv
+
 
 class WordGuess:
     tries = {
@@ -18,6 +20,11 @@ class WordGuess:
             'm' : ['plain','claim','brine','crime','alive','bride','skine','drive','slime','stein','jumpy'],
             'h' : ['machiavellian','prestidigitation','plenipotentiary','quattuordecillion','magnanimous','unencumbered','bioluminescent','circumlocution']
         }
+        self.words = {}
+        with open('words.csv') as csv_file:
+            reader = csv.reader(csv_file)
+            for row in reader:
+                self.words[row[0]] = row[1:]
 
         # ask the user to set the game mode
         self.mode = self.set_mode()
@@ -113,3 +120,4 @@ class WordGuess:
         return letter 
 
 WordGuess()
+WordGuess(True)
